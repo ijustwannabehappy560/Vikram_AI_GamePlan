@@ -1,159 +1,161 @@
 <!DOCTYPE html>
 <html lang="si">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI പ്രവചനങ്ങൾ – තැන්පතුව | AI Predictions – Deposit</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vikram WinKey</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
   <style>
-    .console-box {
-      font-family: monospace;
-      background-color: #1a1a1a;
-      padding: 1rem;
-      border-radius: 0.5rem;
-      box-shadow: 0 0 20px #00ff88;
-      color: #00ff88;
-      height: 250px;
-      overflow-y: auto;
+    :root{
+      --orange:#ff7a00;
+      --green:#0cb86a;
+      --blue:#1b57f2;
+      --bg:#0b0f14;
+      --card:#121826;
+      --muted:#9aa4b2;
     }
-    .loading-screen {
-      font-family: monospace;
-      background: #000;
-      color: #00ff88;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      flex-direction: column;
-      z-index: 50;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif; color:#e9edf3;
+      background: radial-gradient(1000px 600px at 20% -10%, rgba(255,122,0,.18), transparent 60%),
+                  radial-gradient(900px 600px at 120% 0%, rgba(12,184,106,.18), transparent 60%),
+                  #0b0f14;
+      display:flex; align-items:center; justify-content:center; padding:20px;
     }
-    .hidden-screen { display: none; }
+    .wrap{ width:min(480px, 100%); }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
+      backdrop-filter: blur(6px);
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:24px; padding:26px 22px; box-shadow:0 20px 60px rgba(0,0,0,.45);
+      animation: pop .6s ease;
+    }
+    @keyframes pop{ from{transform:translateY(10px); opacity:0} to{transform:none; opacity:1} }
+
+    .flag{width:64px; height:auto; display:block; margin:0 auto 8px; filter:drop-shadow(0 4px 10px rgba(0,0,0,.25));}
+    .title{ text-align:center; font-weight:800; letter-spacing:.2px; margin:2px 0 8px; font-size:28px; }
+    .subtitle{ text-align:center; color:var(--muted); font-size:14px; margin-bottom:18px }
+
+    .badges{display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:0 0 14px}
+    .badge{font-size:11px; color:#d8dee9; background:#1a2336; border:1px solid rgba(255,255,255,.08); padding:6px 10px; border-radius:999px}
+
+    label.block{display:block; font-weight:600; margin-top:14px; margin-bottom:8px}
+    .games{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+    .game{
+      display:flex; align-items:center; gap:8px; padding:10px 12px; border-radius:12px; cursor:pointer;
+      background:#121a2b; border:1px solid rgba(255,255,255,.08);
+      transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease;
+    }
+    .game:hover{ transform:translateY(-1px); border-color:rgba(255,255,255,.16); box-shadow:0 8px 20px rgba(0,0,0,.25)}
+    .game input{ accent-color:var(--green) }
+    .game .icon{font-size:18px}
+
+    .input{
+      width:100%; background:#121a2b; color:#e9edf3; border:1px solid rgba(255,255,255,.1); border-radius:12px;
+      padding:12px 14px; outline:none; transition:border-color .15s ease, box-shadow .15s ease;
+    }
+    .input:focus{ border-color:var(--blue); box-shadow:0 0 0 4px rgba(27,87,242,.18) }
+    .hint{font-size:12px; color:var(--muted); margin-top:6px}
+    .warn{ display:none; color:#ff6767; font-size:13px; margin-top:8px; animation: flash .5s ease }
+    @keyframes flash{ from{opacity:0; transform:translateY(-2px)} to{opacity:1; transform:none} }
+
+    .btn{
+      margin-top:16px; width:100%; border:0; border-radius:14px; padding:14px 16px; font-weight:800; font-size:16px;
+      color:#071018; background:linear-gradient(90deg, var(--orange), var(--green)); cursor:pointer;
+      box-shadow:0 10px 30px rgba(255,122,0,.25), 0 10px 30px rgba(12,184,106,.18);
+      transition: transform .12s ease, filter .2s ease, opacity .2s ease;
+    }
+    .btn:disabled{opacity:.5; cursor:not-allowed; filter:grayscale(.3)}
+    .btn:not(:disabled):active{ transform:scale(.98) }
+
+    .progress{ display:none; height:10px; background:#101625; border-radius:999px; overflow:hidden; margin-top:14px; border:1px solid rgba(255,255,255,.08) }
+    .bar{ height:100%; width:0; background:linear-gradient(90deg, var(--orange), var(--green)); animation: fill 2.4s linear forwards }
+    @keyframes fill{ from{width:0} to{width:100%} }
+
+    .cta{
+      margin-top:18px; display:block; text-align:center; text-decoration:none; font-weight:700; color:#fff;
+      background: linear-gradient(90deg, #1b57f2, #06b6d4);
+      padding:12px 14px; border-radius:12px; border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 12px 30px rgba(27,87,242,.25);
+    }
+
+    .meta{display:flex; justify-content:space-between; align-items:center; margin-top:14px; color:var(--muted); font-size:13px}
+
+    .footer{ text-align:center; color:#a6b0be; font-size:12px; margin-top:14px }
+    .footer strong{color:#fff}
+
+    @media (max-width:420px){
+      .title{font-size:24px}
+      .games{grid-template-columns:1fr}
+    }
   </style>
 </head>
-<body class="bg-gray-900 text-white font-sans">
-  <div id="loading" class="loading-screen hidden-screen">
-    <p>බාගැනෙමින්... කරුණාකර මඳක් රැඳී සිටින්න. | Loading... Please wait.</p>
-  </div>
-  <div id="mainContent" class="">
-    <header class="w-full bg-gray-800 p-4 flex justify-between items-center">
-      <h1 class="text-xl font-bold text-green-400">AI പ്രവചനങ്ങൾ | AI Predictions</h1>
-      <nav class="space-x-4">
-        <a href="#how" class="hover:text-green-400">කෙසේද? | How it works?</a>
-        <a href="#games" class="hover:text-green-400">ක්‍රීඩා | Games</a>
-        <a href="#start" class="hover:text-green-400">ඇරඹීම | Get Started</a>
-      </nav>
-    </header>
-    <section class="min-h-screen flex flex-col items-center justify-center px-4 text-center">
-      <h2 class="text-3xl md:text-5xl font-bold mb-6">
-        AI ක්‍රීඩා ප්‍රවචන සමඟ සැබෑ මුදල් උපයාගන්න | Earn real money with AI game predictions
-      </h2>
-      <div class="mb-4 text-lg font-semibold text-yellow-300">
-        👋 <span class="text-green-400">Vikram</span>ගේ නිල සේවයට ඔබව සාදරයෙන් පිළිගනිමු! | Welcome to the official service of Vikram!
-      </div>
-      <p class="max-w-xl mb-8 text-gray-300">
-        අවිඇටර්, මයින්ස්, දඬුවම් ක්‍රීඩා වලින් දිනූවන්ට එක්වන්න. 98% නිවැරදිවීම, සජීවී ප්‍රවචන සහ ක්ෂණික ආපසු ගැනීම්! | Join winners from Aviator, Mines, Penalty games. 98% accuracy, live predictions and instant payouts!
-      </p>
-      <!-- ID input for connection -->
-      <input id="userId" type="text" placeholder="ඔබගේ ගිණුම් අංකය ඇතුලත් කරන්න | Enter your account ID" class="bg-gray-700 text-white p-3 rounded-md mb-4">
-      <button id="connectButton" class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-xl text-lg transition">ගිණුම සම්බන්ධ කරන්න | Connect Account</button>
-      <!-- Success message -->
-      <div id="connectionSuccess" class="hidden text-green-400 font-bold mt-6">
-        <p>ගිණුම් අංකය: <span id="accountIdDisplay">1234567890</span> සාර්ථකව සම්බන්ධ විය! | Account ID: <span id="accountIdDisplayClone">1234567890</span> connected successfully!</p>
-        <p>තත්ත්වය: සක්‍රීය • 100% නිවැරදි • AI විශ්ලේෂණය කරන ලදී | Status: Active • 100% accurate • Analyzed by AI</p>
-        <button id="getSignalButton" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-6 rounded-xl text-lg transition mt-4">සංඥාව ලබාගන්න | Get Signal</button>
-      </div>
-      <!-- Error message for deposit + PROMOCODE block -->
-      <div id="errorBox" class="hidden bg-red-600 p-6 rounded-xl max-w-md mx-auto mt-6">
-        <h2 class="text-xl font-bold mb-2">⚠️ තැන්පතුව සොයාගත නොහැකි විය | Deposit not found</h2>
-        <p class="mb-4">ඔබගේ ශේෂය හිස් බව පෙනේ. කරුණාකර අවම වශයෙන් <strong>රු. 3500 හෝ වැඩි</strong> තැන්පතුවක් සිදුකර signals ලබාගැනීමට සහ ලාභ උපය ආරම්භ කිරීමට. | Your balance appears empty. Please make a minimum deposit of <strong>LKR 1800</strong> or more to receive signals and start earning profits.</p>
-        <a href="https://reffpa.com/L?tag=d_4972479m_97c__[]general[]_d173877_l237042_adaptive_banner&site=4972479&ad=97&r=registration" target="_blank" id="depositButton" class="inline-block bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg transition">
-          දැන් තැන්පතු කරන්න | Deposit Now
-        </a>
-        <!-- Promo code -->
-        <div class="mb-1 text-lg">
-          ඔබගේ ප්‍රවර්ධන කේතය (Your promo code): 
-          <span class="bg-black p-1 rounded text-green-400">JOS45</span>
-        </div>
-        
-      </div>
-    </section>
-    <!-- Winners -->
-    <section class="bg-gray-800 py-12 px-6 text-center">
-      <h3 class="text-2xl font-bold text-green-400 mb-6">අද දින දිනූවන් (රු.) | Today's Winners (LKR)</h3>
-      <div class="grid md:grid-cols-2 gap-4 text-left max-w-4xl mx-auto text-sm text-green-300">
-        <p>👤 User: 1218473422 – රු. 25,328 | LKR 25,328</p>
-        <p>👤 User: 9912384741 – රු. 21,900 | LKR 21,900</p>
-        <p>👤 User: 3099234822 – රු. 14,120 | LKR 14,120</p>
-        <p>👤 User: 1187339121 – රු. 10,000 | LKR 10,000</p>
-        <p>👤 User: 4412900113 – රු. 12,850 | LKR 12,850</p>
-        <p>👤 User: 8283721091 – රු. 18,440 | LKR 18,440</p>
-        <p>👤 User: 7751937742 – රු. 10,705 | LKR 10,705</p>
-        <p>👤 User: 5554921811 – රු. 9,330 | LKR 9,330</p>
-        <p>👤 User: 1983238742 – රු. 8,000 | LKR 8,000</p>
-        <p>👤 User: 3377749301 – රු. 7,210 | LKR 7,210</p>
-      </div>
-    </section>
-    <!-- Supported games -->
-    <section id="games" class="bg-gray-800 py-12 px-6 text-center">
-      <h3 class="text-2xl font-bold text-green-400 mb-6">සහාය දක්වන ක්‍රීඩා | Supported games</h3>
-      <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
-          <h4 class="text-xl font-bold mb-2">🎮 Aviator</h4>
-          <p class="text-gray-300">ගුවන් යානය ගොස් යාමේ පෙර මුදල් ගන්න. AI මගින් සජීවී රටා හඳුනාගනී. | Cash out before the plane flies — AI detects live patterns.</p>
-        </div>
-        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
-          <h4 class="text-xl font-bold mb-2">💣 Mines</h4>
-          <p class="text-gray-300">බෝම්බ වලින් වැළකී ලාභ ගන්න. අපේ AI වැඩිම ආදායම සඳහා අවදානම් අඩු මාර්ග සොයනවා. | Avoid bombs and win. Our AI finds lower-risk routes for maximum profit.</p>
-        </div>
-        <div class="bg-gray-700 p-6 rounded-xl shadow-lg">
-          <h4 class="text-xl font-bold mb-2">🥅 Penalty</h4>
-          <p class="text-gray-300">ගෝල්කීපර් ජයගන්න සජීවී දත්ත මත පදනම් වූ පුරෝකථන. | Penalty predictions based on live data.</p>
-        </div>
-      </div>
-    </section>
-    <!-- How it works -->
-    <section id="how" class="bg-gray-900 py-12 px-6 text-center">
-      <h3 class="text-2xl font-bold text-green-400 mb-6">එය ක්‍රියා කරන ආකාරය | How it works</h3>
-      <div class="max-w-3xl mx-auto space-y-4 text-gray-300">
-        <p>📡 AI සජීවී සහ ඉතිහාස ගේම් දත්ත විශ්ලේෂණය කරයි. | AI analyzes live and historical game data.</p>
-        <p>💡 නිතරම ලාභ ලබාදෙන රටා හඳුනාගනී. | Identifies consistently profitable patterns.</p>
-        <p>📲 ඔබගේ උපාංගයට සෘජු සජීවී සංඥා ලැබේ. | Sends live signals straight to your device.</p>
-      </div>
-    </section>
-    <section class="bg-black py-12 px-6 text-center">
-      <h3 class="text-xl font-bold text-green-400 mb-4">[ Console – නිරීක්ෂණ ලොග් ] | [ Console – Monitoring Log ]</h3>
-      <div class="console-box max-w-3xl mx-auto text-left" id="console">
-        <p>[INFO] ප්‍රවචන සේවය සක්‍රීයයි ✅ | [INFO] Prediction service is active ✅</p>
-      </div>
-    </section>
-    <footer class="text-center text-gray-500 text-sm py-6">
-      © 2025 AI Predictions. 1xBet සමඟ සම්බන්ධතාවක් නොමැත. වගකිවයුතු ලෙස භාවිත කරන්න. | © 2025 AI Predictions. Not affiliated with 1xBet. Use responsibly.
-    </footer>
-  </div>
-  <script>
-    setTimeout(() => {
-      document.getElementById("loading").classList.add("hidden-screen");
-      document.getElementById("mainContent").classList.remove("hidden-screen");
-    }, 3000);
+<body>
+  <div class="wrap">
+    <div class="card">
+      <img src="https://flagcdn.com/w320/lk.png" class="flag" alt="Sri Lanka Flag"/>
+      <div class="title">වික්රම් WinKey</div>
+      <div class="subtitle">ඉක්මන් සඟහන් • ශ්‍රී ලංකාව සඳහා • LKR</div>
 
-    document.getElementById("connectButton").addEventListener("click", () => {
-      const userId = document.getElementById("userId").value;
-      if (userId) {
-        document.getElementById("accountIdDisplay").innerText = userId;
-        // also update clone used in English sentence
-        const clone = document.getElementById("accountIdDisplayClone");
-        if (clone) clone.innerText = userId;
-        document.getElementById("connectionSuccess").classList.remove("hidden");
-        document.getElementById("errorBox").classList.add("hidden");
-      }
+      <div class="badges">
+        <div class="badge">🔒 ආරක්ෂිතයි</div>
+        <div class="badge">✅ සත්‍යාපිත</div>
+        <div class="badge">🇱🇰 දේශීය සහය</div>
+      </div>
+
+      <label class="block">ඔබේ ගේම් එක තෝරන්න</label>
+      <div class="games">
+        <label class="game"><input type="radio" name="game" checked> <span class="icon">💥</span> ක්‍රෑෂ්</label>
+        <label class="game"><input type="radio" name="game"> <span class="icon">✈️</span> ගුවන්</label>
+        <label class="game"><input type="radio" name="game"> <span class="icon">💎</span> මයින්ස්</label>
+        <label class="game"><input type="radio" name="game"> <span class="icon">🐔</span> චිකන් රෝඩ්</label>
+        <label class="game"><input type="radio" name="game"> <span class="icon">⚽</span> පැනල්ටි</label>
+      </div>
+
+      <label class="block" for="acc">1xBet ගිණුම් අංකය</label>
+      <input id="acc" class="input" placeholder="උදාහරණය: 9876543210" maxlength="10" inputmode="numeric" />
+      <div class="hint">අංක 10ක් ඇතුලත් කරන්න • මුදල: LKR</div>
+      <div class="warn" id="warn">කරුණාකර නිවැරදි අංක 10ක් ඇතුලත් කරන්න.</div>
+
+      <button class="btn" id="start" disabled>ආරම්භ කරන්න</button>
+      <div class="progress" id="progress"><div class="bar"></div></div>
+
+      <a class="cta" id="depositLink" href="https://reffpa.com/L?tag=d_4972479m_97c__[]general[]_d173877_l237042_adaptive_banner&site=4972479&ad=97&r=registration" target="_blank">💳 තැන්පතුව කරන්න</a>
+
+      <div class="meta">
+        <div>🔵 Online: <span id="online">147</span></div>
+        <div>⏳ ප්‍රවේශය අවසන් වන්නේ <span id="countdown">05:00</span> තුළ</div>
+      </div>
+
+      <div class="footer"><strong>HackerHouse</strong> • Colombo</div>
+    </div>
+  </div>
+
+  <script>
+    let left = 300; const cd = document.getElementById('countdown');
+    setInterval(()=>{ if(left>0) left--; const m=Math.floor(left/60).toString().padStart(2,'0'); const s=(left%60).toString().padStart(2,'0'); cd.textContent=`${m}:${s}`; },1000);
+
+    const onlineEl = document.getElementById('online');
+    setInterval(()=>{ const base = 140; const jitter = Math.floor(Math.random()*8)-4; onlineEl.textContent = base + jitter; }, 2500);
+
+    const acc = document.getElementById('acc');
+    const start = document.getElementById('start');
+    const warn = document.getElementById('warn');
+    acc.addEventListener('input', ()=>{
+      const ok = /^\d{10}$/.test(acc.value);
+      start.disabled = !ok; warn.style.display = ok? 'none':'block';
     });
 
-    document.getElementById("getSignalButton").addEventListener("click", () => {
-      document.getElementById("errorBox").classList.remove("hidden");
+    const progress = document.getElementById('progress');
+    start.addEventListener('click', ()=>{
+      progress.style.display='block';
+      const bar = progress.querySelector('.bar');
+      bar.style.animation='none'; bar.offsetHeight; bar.style.animation='fill 2.4s linear forwards';
+      setTimeout(()=>{
+        alert('❌ 1800 LKR තැන්පතුව සොයාගත නොහැකි විය. කරුණාකර තැන්පතුව చేసి නැවත උත්සාහ කරන්න.');
+      }, 2400);
     });
   </script>
 </body>
